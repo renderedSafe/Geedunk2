@@ -28,14 +28,14 @@
   <widget class="QPushButton" name="pushButton_1">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>88</y>
-     <width>127</width>
+     <x>2</x>
+     <y>77</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -68,14 +68,14 @@
   <widget class="QPushButton" name="pushButton_0">
    <property name="geometry">
     <rect>
-     <x>138</x>
-     <y>361</y>
-     <width>126</width>
+     <x>112</x>
+     <y>302</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -99,14 +99,14 @@
   <widget class="QPushButton" name="pushButton_del">
    <property name="geometry">
     <rect>
-     <x>274</x>
-     <y>361</y>
-     <width>126</width>
+     <x>222</x>
+     <y>302</y>
+     <width>99</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -130,14 +130,14 @@
   <widget class="QPushButton" name="pushButton_9">
    <property name="geometry">
     <rect>
-     <x>274</x>
-     <y>270</y>
-     <width>126</width>
+     <x>222</x>
+     <y>227</y>
+     <width>99</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -161,14 +161,14 @@
   <widget class="QLineEdit" name="lineEdit">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>1</y>
-     <width>399</width>
-     <height>77</height>
+     <x>2</x>
+     <y>2</y>
+     <width>319</width>
+     <height>65</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -203,14 +203,14 @@
   <widget class="QPushButton" name="pushButton_8">
    <property name="geometry">
     <rect>
-     <x>138</x>
-     <y>270</y>
-     <width>126</width>
+     <x>112</x>
+     <y>227</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -234,14 +234,14 @@
   <widget class="QPushButton" name="pushButton_3">
    <property name="geometry">
     <rect>
-     <x>274</x>
-     <y>88</y>
-     <width>126</width>
+     <x>222</x>
+     <y>77</y>
+     <width>99</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -265,14 +265,14 @@
   <widget class="QPushButton" name="pushButton_6">
    <property name="geometry">
     <rect>
-     <x>274</x>
-     <y>179</y>
-     <width>126</width>
+     <x>222</x>
+     <y>152</y>
+     <width>99</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -296,14 +296,14 @@
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>138</x>
-     <y>88</y>
-     <width>126</width>
+     <x>112</x>
+     <y>77</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -327,14 +327,14 @@
   <widget class="QPushButton" name="pushButton_4">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>179</y>
-     <width>127</width>
+     <x>2</x>
+     <y>152</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -367,14 +367,14 @@
   <widget class="QPushButton" name="pushButton_7">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>270</y>
-     <width>127</width>
+     <x>2</x>
+     <y>227</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -407,14 +407,14 @@
   <widget class="QPushButton" name="pushButton_clr">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>361</y>
-     <width>127</width>
+     <x>2</x>
+     <y>302</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -447,14 +447,14 @@
   <widget class="QPushButton" name="pushButton_5">
    <property name="geometry">
     <rect>
-     <x>138</x>
-     <y>179</y>
-     <width>126</width>
+     <x>112</x>
+     <y>152</y>
+     <width>100</width>
      <height>81</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -478,14 +478,14 @@
   <widget class="QPushButton" name="pushButton_login">
    <property name="geometry">
     <rect>
-     <x>1</x>
-     <y>452</y>
-     <width>401</width>
-     <height>81</height>
+     <x>0</x>
+     <y>390</y>
+     <width>321</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="sizePolicy">
-    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
