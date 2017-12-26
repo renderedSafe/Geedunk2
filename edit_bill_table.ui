@@ -16,10 +16,10 @@
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>60</y>
+     <x>10</x>
+     <y>10</y>
      <width>491</width>
-     <height>441</height>
+     <height>351</height>
     </rect>
    </property>
    <property name="font">
@@ -74,8 +74,8 @@
   <widget class="QPushButton" name="pushButton_edit">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>60</y>
+     <x>510</x>
+     <y>10</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -87,8 +87,8 @@
   <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>430</y>
+     <x>510</x>
+     <y>220</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -100,8 +100,8 @@
   <widget class="QPushButton" name="pushButton_charge">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>240</y>
+     <x>510</x>
+     <y>80</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -113,8 +113,8 @@
   <widget class="QPushButton" name="pushButton_credit">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>340</y>
+     <x>510</x>
+     <y>150</y>
      <width>161</width>
      <height>61</height>
     </rect>
@@ -126,8 +126,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>500</y>
+     <x>20</x>
+     <y>350</y>
      <width>241</width>
      <height>61</height>
     </rect>
@@ -148,8 +148,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>300</x>
-     <y>500</y>
+     <x>270</x>
+     <y>350</y>
      <width>111</width>
      <height>61</height>
     </rect>
@@ -170,8 +170,8 @@
   <widget class="QLabel" name="label_debt">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>510</y>
+     <x>380</x>
+     <y>360</y>
      <width>111</width>
      <height>41</height>
     </rect>
