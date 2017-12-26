@@ -403,7 +403,7 @@ class MenuPageUI(QtWidgets.QWidget):
         for item in selection:
 
             if item[2] == 'food':
-                if food_buttons_total % 18 == 0 and food_buttons_total != 0:
+                if food_buttons_total % 6 == 0 and food_buttons_total != 0:
                     self.food_buttons.append(MenuButtonFieldUI(self))  # adds a new holder for the new menu buttons
                     self.food_button_fields.addWidget(
                         self.food_buttons[-1])  # adds that holder to the stack of food buttons
@@ -414,7 +414,7 @@ class MenuPageUI(QtWidgets.QWidget):
                                               item[1]))
                 self.buttons[-1].clicked.connect(partial(self.button_click, item[0], item[1]))
                 self.food_buttons[self.food_button_pages].gridLayout.addWidget(self.buttons[-1], fr, fc)
-                if fc < 5:
+                if fc < 2:
                     fc += 1
                 else:
                     fc = 0
@@ -422,7 +422,7 @@ class MenuPageUI(QtWidgets.QWidget):
                 food_buttons_total += 1
 
             if item[2] == 'snack':
-                if snack_buttons_total % 18 == 0 and snack_buttons_total != 0:
+                if snack_buttons_total % 6 == 0 and snack_buttons_total != 0:
                     self.snack_buttons.append(MenuButtonFieldUI(self))  # adds a new holder for the new menu buttons
                     self.snack_button_fields.addWidget(
                         self.snack_buttons[-1])  # adds that holder to the stack of food buttons
@@ -433,7 +433,7 @@ class MenuPageUI(QtWidgets.QWidget):
                                               item[1]))
                 self.buttons[-1].clicked.connect(partial(self.button_click, item[0], item[1]))
                 self.snack_buttons[self.snack_button_pages].gridLayout.addWidget(self.buttons[-1], sr, sc)
-                if sc < 5:
+                if sc < 2:
                     sc += 1
                 else:
                     sc = 0
@@ -441,7 +441,7 @@ class MenuPageUI(QtWidgets.QWidget):
                     snack_buttons_total += 1
 
             if item[2] == 'drink':
-                if drink_buttons_total % 18 == 0 and drink_buttons_total != 0:
+                if drink_buttons_total % 6 == 0 and drink_buttons_total != 0:
                     self.drink_buttons.append(MenuButtonFieldUI(self))  # adds a new holder for the new menu buttons
                     self.drink_button_fields.addWidget(
                         self.drink_buttons[-1])  # adds that holder to the stack of food buttons
@@ -452,7 +452,7 @@ class MenuPageUI(QtWidgets.QWidget):
                                               item[1]))
                 self.buttons[-1].clicked.connect(partial(self.button_click, item[0], item[1]))
                 self.drink_buttons[self.drink_button_pages].gridLayout.addWidget(self.buttons[-1], dr, dc)
-                if dc < 5:
+                if dc < 2:
                     dc += 1
                 else:
                     dc = 0
