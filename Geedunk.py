@@ -93,6 +93,7 @@ class LoginPageUI(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.numpad.pushButton_login.clicked.connect(self.login)
+        self.numpad.lineEdit.setEchoMode(QLineEdit.Password)
 
     def login(self):
         selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES, BILL
@@ -584,6 +585,7 @@ class AdminOptionsPageUI(QtWidgets.QWidget):
         self.pushButton_editMenuItems.clicked.connect(self.parent().to_edit_menu_items_page)
         self.pushButton_manageUserProfiles.clicked.connect(self.parent().to_edit_user_page)
         self.pushButton_manageUserBills.clicked.connect(self.to_manage_bills)
+        self.pushButton_exitApplication.clicked.connect(QApplication.quit)
 
     def to_manage_bills(self):
         window.edit_bills_page.load_table()
@@ -781,28 +783,34 @@ class EditUserPageUI(QtWidgets.QWidget):
         self.pushButton_back.clicked.connect(self.back)
 
     def edit_user(self):
-        selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES
-                                            FROM USER_LOGIN
-                                            WHERE USERNAME = ?;''',
-                                 (self.user_list.listWidget.currentItem().text(),)).fetchone()
-        window.create_user_page.edit_mode(selection)
-        window.to_create_user_page()
-        self.label_message.setText('')
+        try:
+            selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES
+                                                FROM USER_LOGIN
+                                                WHERE USERNAME = ?;''',
+                                     (self.user_list.listWidget.currentItem().text(),)).fetchone()
+            window.create_user_page.edit_mode(selection)
+            window.to_create_user_page()
+            self.label_message.setText('')
+        except Exception as e:
+            print(e)
 
     def delete_user(self):
-        selected_user = self.user_list.listWidget.currentItem().text()
-        if selected_user == user_session.username:
-            self.label_message.setText('You can\'t delete the account you\'re logged into dummy.')
-        else:
-            id = conn.execute('SELECT id FROM user_login WHERE username = ?;',
-                                        (self.user_list.listWidget.currentItem().text(),)).fetchone()
-            conn.execute('DELETE FROM user_login WHERE id = ?;',
-                         (str(id[0]),))
-            conn.execute('DELETE FROM user_bills WHERE user_id = ?;',
-                         (str(id[0]),))
-            conn.commit()
-            self.label_message.setText('')
-            self.user_list.add_names()
+        try:
+            selected_user = self.user_list.listWidget.currentItem().text()
+            if selected_user == user_session.username:
+                self.label_message.setText('You can\'t delete the account you\'re logged into dummy.')
+            else:
+                id = conn.execute('SELECT id FROM user_login WHERE username = ?;',
+                                            (self.user_list.listWidget.currentItem().text(),)).fetchone()
+                conn.execute('DELETE FROM user_login WHERE id = ?;',
+                             (str(id[0]),))
+                conn.execute('DELETE FROM user_bills WHERE user_id = ?;',
+                             (str(id[0]),))
+                conn.commit()
+                self.label_message.setText('')
+                self.user_list.add_names()
+        except Exception as e:
+            print(e)
 
     def back(self):
         self.label_message.setText('')
