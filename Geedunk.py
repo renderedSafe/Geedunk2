@@ -14,7 +14,6 @@ from ListWidgetImageItem import ListWidgetImageItem
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
-        self.setGeometry(50, 50, 2000, 980)
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
 
@@ -1103,5 +1102,5 @@ ROOT_DIR = os.path.curdir
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     window = MainWindow()
-    window.show()
+    window.showFullScreen()
     app.exec_()
