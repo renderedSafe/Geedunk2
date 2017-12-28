@@ -835,6 +835,8 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
         self.landing.pushButton_credit.clicked.connect(self.credit_bill)
         self.landing.pushButton_back.clicked.connect(self.back)
 
+        self.numpad.pushButton_login.disconnect()
+
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.stack)
         self.setLayout(layout)
@@ -860,20 +862,20 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
     def edit_bill(self):
         selected_bill = self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1).text()
         if selected_bill is not None:
-            self.numpad.pushButton_login.disconnect()
+            print('editing bill')
             self.numpad.pushButton_login.clicked.connect(self.write_edit)
             self.numpad.lineEdit.setText(selected_bill)
             self.stack.setCurrentWidget(self.numpad)
 
     def credit_bill(self):
         if self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1) is not None:
-            self.numpad.pushButton_login.disconnect()
+            print('Crediting bill')
             self.numpad.pushButton_login.clicked.connect(self.write_credit)
             self.stack.setCurrentWidget(self.numpad)
 
     def charge_bill(self):
         if self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1) is not None:
-            self.numpad.pushButton_login.disconnect()
+            print('Charging bill')
             self.numpad.pushButton_login.clicked.connect(self.write_charge)
             self.stack.setCurrentWidget(self.numpad)
 
