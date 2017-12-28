@@ -244,6 +244,7 @@ class NewUserPageUI(QtWidgets.QWidget):
         self.create_user_form.checkBox_admin.setChecked(True)
         self.create_user_form.checkBox_admin.setEnabled(False)
         self.create_user_form.pushButton_createUser.disconnect()
+        self.create_user_form.pushButton_back.disconnect()
         self.create_user_form.pushButton_createUser.clicked.connect(self.write_first_admin)
         self.create_user_form.pushButton_createUser.setText('Create Admin')
 
@@ -585,7 +586,7 @@ class AdminOptionsPageUI(QtWidgets.QWidget):
         self.pushButton_editMenuItems.clicked.connect(self.parent().to_edit_menu_items_page)
         self.pushButton_manageUserProfiles.clicked.connect(self.parent().to_edit_user_page)
         self.pushButton_manageUserBills.clicked.connect(self.to_manage_bills)
-        self.pushButton_exitApplication.clicked.connect(QApplication.quit)
+        self.pushButton_exitApplication.clicked.connect(app.quit)
 
     def to_manage_bills(self):
         window.edit_bills_page.load_table()
