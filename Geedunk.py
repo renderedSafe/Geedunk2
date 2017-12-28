@@ -9,6 +9,7 @@ import sqlite3
 from PicButton import PicButton
 import os
 from ListWidgetImageItem import ListWidgetImageItem
+import sys
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -51,7 +52,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.to_create_user_page()
 
     def shutdown(self):
-        self.destroy()
+        sys.exit()
 
 
     # --------------Page switch functions below.-----------------
