@@ -50,6 +50,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.create_user_page.first_run()
             self.to_create_user_page()
 
+    def shutdown(self):
+        self.destroy()
 
 
     # --------------Page switch functions below.-----------------
@@ -586,7 +588,7 @@ class AdminOptionsPageUI(QtWidgets.QWidget):
         self.pushButton_editMenuItems.clicked.connect(self.parent().to_edit_menu_items_page)
         self.pushButton_manageUserProfiles.clicked.connect(self.parent().to_edit_user_page)
         self.pushButton_manageUserBills.clicked.connect(self.to_manage_bills)
-        self.pushButton_exitApplication.clicked.connect(app.quit)
+        self.pushButton_exitApplication.clicked.connect(self.parent().shutdown)
 
     def to_manage_bills(self):
         window.edit_bills_page.load_table()
@@ -821,13 +823,13 @@ class EditUserPageUI(QtWidgets.QWidget):
 class EditUserBillsPageUI(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(EditUserBillsPageUI, self).__init__(parent)
-        self.landing = EditBillsLandingUI(self)
-        self.numpad = NumpadWidgetUI(self)
-        self.stack = QStackedWidget(self)
+        self.landing = EditBillsLandingUI()
+        self.numpad1 = NumpadWidgetUI()
+        self.stack = QStackedWidget()
         self.stack.addWidget(self.landing)
-        self.stack.addWidget(self.numpad)
+        self.stack.addWidget(self.numpad1)
         self.stack.setCurrentWidget(self.landing)
-        self.numpad.set_money_mode()
+        self.numpad1.set_money_mode()
         self.load_table()
 
         self.landing.pushButton_edit.clicked.connect(self.edit_bill)
@@ -835,7 +837,7 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
         self.landing.pushButton_credit.clicked.connect(self.credit_bill)
         self.landing.pushButton_back.clicked.connect(self.back)
 
-        self.numpad.pushButton_login.disconnect()
+        self.numpad1.pushButton_login.disconnect()
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.stack)
@@ -863,25 +865,25 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
         selected_bill = self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1).text()
         if selected_bill is not None:
             print('editing bill')
-            self.numpad.pushButton_login.clicked.connect(self.write_edit)
-            self.numpad.lineEdit.setText(selected_bill)
-            self.stack.setCurrentWidget(self.numpad)
+            self.numpad1.pushButton_login.clicked.connect(self.write_edit)
+            self.numpad1.lineEdit.setText(selected_bill)
+            self.stack.setCurrentWidget(self.numpad1)
 
     def credit_bill(self):
         if self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1) is not None:
             print('Crediting bill')
-            self.numpad.pushButton_login.clicked.connect(self.write_credit)
-            self.stack.setCurrentWidget(self.numpad)
+            self.numpad1.pushButton_login.clicked.connect(self.write_credit)
+            self.stack.setCurrentWidget(self.numpad1)
 
     def charge_bill(self):
         if self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1) is not None:
             print('Charging bill')
-            self.numpad.pushButton_login.clicked.connect(self.write_charge)
-            self.stack.setCurrentWidget(self.numpad)
+            self.numpad1.pushButton_login.clicked.connect(self.write_charge)
+            self.stack.setCurrentWidget(self.numpad1)
 
     def write_edit(self):
         username = self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 0).text()
-        print(self.numpad.lineEdit.text())
+        print(self.numpad1.lineEdit.text())
         # Converting all money to cents with *100 for DB storage
         try:
             conn.execute('''UPDATE user_bills
@@ -891,7 +893,7 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
                          (int(float(self.numpad.lineEdit.text())*100), username))
             conn.commit()
             print(self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 0).text())
-            self.numpad.lineEdit.clear()
+            self.numpad1.lineEdit.clear()
             self.load_table()
             self.stack.setCurrentWidget(self.landing)
         except ValueError as e:
@@ -905,9 +907,9 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
                                     SET bill = ?
                                     WHERE user_id = (SELECT id FROM user_login 
                                                      WHERE username = ?);''',
-                         (int(float(selected_bill) * 100) - int(float(self.numpad.lineEdit.text()) * 100), selected_user))
+                         (int(float(selected_bill) * 100) - int(float(self.numpad1.lineEdit.text()) * 100), selected_user))
             conn.commit()
-            self.numpad.lineEdit.clear()
+            self.numpad1.lineEdit.clear()
             self.load_table()
             self.stack.setCurrentWidget(self.landing)
         except ValueError as e:
@@ -921,9 +923,9 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
                                             SET bill = ?
                                             WHERE user_id = (SELECT id FROM user_login 
                                                              WHERE username = ?);''',
-                         (int(float(selected_bill) * 100) + int(float(self.numpad.lineEdit.text()) * 100), selected_user))
+                         (int(float(selected_bill) * 100) + int(float(self.numpad1.lineEdit.text()) * 100), selected_user))
             conn.commit()
-            self.numpad.lineEdit.clear()
+            self.numpad1.lineEdit.clear()
             self.load_table()
             self.stack.setCurrentWidget(self.landing)
         except ValueError as e:
