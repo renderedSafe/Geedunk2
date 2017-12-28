@@ -821,7 +821,7 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(EditUserBillsPageUI, self).__init__(parent)
         self.landing = EditBillsLandingUI(self)
-        self.numpad = NumpadWidgetUI()
+        self.numpad = NumpadWidgetUI(self)
         self.stack = QStackedWidget()
         self.stack.addWidget(self.landing)
         self.stack.addWidget(self.numpad)
