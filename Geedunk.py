@@ -837,11 +837,14 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
         self.landing.pushButton_credit.clicked.connect(self.credit_bill)
         self.landing.pushButton_back.clicked.connect(self.back)
 
-        self.numpad1.pushButton_login.disconnect()
+        self.numpad1.pushButton_login.clicked.connect(self.dummy_func)
 
         layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.stack)
         self.setLayout(layout)
+
+    def dummy_func(self):
+        pass
 
     def load_table(self):
         join_selection = conn.execute('''SELECT username, bill FROM USER_LOGIN  INNER JOIN user_bills 
@@ -865,6 +868,7 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
         selected_bill = self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1).text()
         if selected_bill is not None:
             print('editing bill')
+            self.numpad1.pushButton_login.disconnect()
             self.numpad1.pushButton_login.clicked.connect(self.write_edit)
             self.numpad1.lineEdit.setText(selected_bill)
             self.stack.setCurrentWidget(self.numpad1)
@@ -872,12 +876,14 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
     def credit_bill(self):
         if self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1) is not None:
             print('Crediting bill')
+            self.numpad1.pushButton_login.disconnect()
             self.numpad1.pushButton_login.clicked.connect(self.write_credit)
             self.stack.setCurrentWidget(self.numpad1)
 
     def charge_bill(self):
         if self.landing.tableWidget.item(self.landing.tableWidget.currentRow(), 1) is not None:
             print('Charging bill')
+            self.numpad1.pushButton_login.disconnect()
             self.numpad1.pushButton_login.clicked.connect(self.write_charge)
             self.stack.setCurrentWidget(self.numpad1)
 
