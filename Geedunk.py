@@ -442,7 +442,7 @@ class MenuPageUI(QtWidgets.QWidget):
                 else:
                     sc = 0
                     sr += 1
-                    snack_buttons_total += 1
+                snack_buttons_total += 1
 
             if item[2] == 'drink':
                 if drink_buttons_total % 6 == 0 and drink_buttons_total != 0:
@@ -461,7 +461,7 @@ class MenuPageUI(QtWidgets.QWidget):
                 else:
                     dc = 0
                     dr += 1
-                    drink_buttons_total += 1
+                drink_buttons_total += 1
 
     def button_click(self, name, price):
         found_item = self.tableWidget.findItems(name, Qt.MatchExactly)
