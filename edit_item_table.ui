@@ -22,6 +22,9 @@
      <height>351</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QScrollBar:vertical { width: 80px; }</string>
+   </property>
    <property name="editTriggers">
     <set>QAbstractItemView::NoEditTriggers</set>
    </property>
@@ -30,6 +33,9 @@
    </property>
    <property name="alternatingRowColors">
     <bool>true</bool>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
    </property>
    <property name="selectionBehavior">
     <enum>QAbstractItemView::SelectRows</enum>

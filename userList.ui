@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>341</width>
+     <width>371</width>
      <height>411</height>
     </rect>
    </property>
@@ -132,7 +132,7 @@
     <cursorShape>ArrowCursor</cursorShape>
    </property>
    <property name="styleSheet">
-    <string notr="true"/>
+    <string notr="true">QScrollBar:vertical { width: 80px; }</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::WinPanel</enum>
@@ -147,7 +147,7 @@
     <number>8</number>
    </property>
    <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAsNeeded</enum>
+    <enum>Qt::ScrollBarAlwaysOn</enum>
    </property>
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -157,6 +157,18 @@
    </property>
    <property name="autoScrollMargin">
     <number>30</number>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="showDropIndicator" stdset="0">
+    <bool>true</bool>
+   </property>
+   <property name="dragEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="dragDropMode">
+    <enum>QAbstractItemView::DragOnly</enum>
    </property>
    <property name="alternatingRowColors">
     <bool>true</bool>
@@ -168,7 +180,7 @@
     <enum>QAbstractItemView::ScrollPerItem</enum>
    </property>
    <property name="movement">
-    <enum>QListView::Free</enum>
+    <enum>QListView::Snap</enum>
    </property>
    <property name="spacing">
     <number>4</number>
@@ -186,7 +198,7 @@
     <bool>false</bool>
    </property>
    <property name="sortingEnabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

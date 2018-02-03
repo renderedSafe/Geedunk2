@@ -99,16 +99,19 @@ class LoginPageUI(QtWidgets.QWidget):
         self.numpad.lineEdit.setEchoMode(QLineEdit.Password)
 
     def login(self):
-        selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES, BILL
-                                    FROM USER_LOGIN INNER JOIN USER_BILLS ON USER_LOGIN.ID = USER_BILLS.USER_ID
-                                    WHERE USERNAME = ?;''', (self.userList.listWidget.currentItem().text(),)).fetchone()
-        if user_session.authenticate(selection, self.numpad.lineEdit.text()):
-            print('authenticated')
-            user_session.start_session(selection)
-            window.menu_page.set_session_objects()
-            window.to_menu_page()
-            print('To menu page')
-            self.clear_ui()
+        try:
+            selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES, BILL
+                                        FROM USER_LOGIN INNER JOIN USER_BILLS ON USER_LOGIN.ID = USER_BILLS.USER_ID
+                                        WHERE USERNAME = ?;''', (self.userList.listWidget.currentItem().text(),)).fetchone()
+            if user_session.authenticate(selection, self.numpad.lineEdit.text()):
+                print('authenticated')
+                user_session.start_session(selection)
+                window.menu_page.set_session_objects()
+                window.to_menu_page()
+                print('To menu page')
+                self.clear_ui()
+        except Exception as e:
+            print(e)
 
     def clear_ui(self):
         self.numpad.lineEdit.clear()
@@ -350,7 +353,9 @@ class MenuPageUI(QtWidgets.QWidget):
 
         if user_session.bill <= 0:
             self.label_billLabel.setText('Your credit:')
-        else:
+        elif user_session.bill >= 1000:
+            self.label_billLabel.setText("Pay damnit!")
+        elif user_session.bill < 1000 and user_session.bill > 0:
             self.label_billLabel.setText('You owe:')
 
         self.label_bill.setText('${:6.2f}'.format(abs(user_session.bill/100)))
@@ -756,7 +761,7 @@ class EditMenuItemsPageUI(QtWidgets.QWidget):
         for item in selection:
             self.tableWidget.insertRow(row)
             self.tableWidget.setItem(row, 0, QTableWidgetItem(item[0]))
-            self.tableWidget.setItem(row, 1, QTableWidgetItem(str(item[1])))
+            self.tableWidget.setItem(row, 1, QTableWidgetItem(f'{item[1]:.2f}'))
             row += 1
 
     def edit(self):
@@ -990,8 +995,12 @@ class UserListWidgetUI(QtWidgets.QWidget):
     def add_names(self):
         self.listWidget.clear()
         selection = conn.execute('SELECT USERNAME FROM user_login')
+        font = QFont()
+        font.setPointSize(20)
         for row in selection:
-            self.listWidget.addItem(row[0])
+            item = QListWidgetItem(row[0])
+            item.setFont(font)
+            self.listWidget.addItem(item)
 
 
 class CreateUserFormUI(QtWidgets.QWidget):
