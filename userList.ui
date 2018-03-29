@@ -129,7 +129,7 @@
     </font>
    </property>
    <property name="cursor" stdset="0">
-    <cursorShape>ArrowCursor</cursorShape>
+    <cursorShape>BlankCursor</cursorShape>
    </property>
    <property name="styleSheet">
     <string notr="true">QScrollBar:vertical { width: 80px; }</string>
@@ -155,6 +155,9 @@
    <property name="sizeAdjustPolicy">
     <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
    </property>
+   <property name="autoScroll">
+    <bool>true</bool>
+   </property>
    <property name="autoScrollMargin">
     <number>30</number>
    </property>
@@ -162,13 +165,19 @@
     <set>QAbstractItemView::NoEditTriggers</set>
    </property>
    <property name="showDropIndicator" stdset="0">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="dragEnabled">
     <bool>false</bool>
    </property>
+   <property name="dragDropOverwriteMode">
+    <bool>false</bool>
+   </property>
    <property name="dragDropMode">
-    <enum>QAbstractItemView::DragOnly</enum>
+    <enum>QAbstractItemView::DropOnly</enum>
+   </property>
+   <property name="defaultDropAction">
+    <enum>Qt::MoveAction</enum>
    </property>
    <property name="alternatingRowColors">
     <bool>true</bool>

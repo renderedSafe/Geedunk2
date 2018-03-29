@@ -10,6 +10,7 @@ from PicButton import PicButton
 import os
 from ListWidgetImageItem import ListWidgetImageItem
 import sys
+import datetime
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -286,7 +287,6 @@ class NewUserPageUI(QtWidgets.QWidget):
         except sqlite3.IntegrityError:
             self.create_user_form.label_error.setText('Username already in use')
 
-
     def back(self):
         window.to_admin_options_page()
         self.clear_ui()
@@ -332,6 +332,8 @@ class MenuPageUI(QtWidgets.QWidget):
 
         # ----------------------------------------------------------------------------------
         self.purchase_total = 0
+        self.selected_items = []    #used to track which items are on the purchase queue
+        self.purchase_number = 0    #used to give each purchase an incremental id
         self.row = 0
         self.previous_button = 'food'
         self.pushButton_food.setStyleSheet("background-color: #91b6f2")
@@ -342,6 +344,15 @@ class MenuPageUI(QtWidgets.QWidget):
         self.pay_bills_buttons.pushButton_20.clicked.connect(partial(self.button_click, '$20', -20))
 
     def set_session_objects(self):
+        # here we select the last item's purchase ID (note that purchase ID is only incremented after the actions caused
+        # by the "Purchase" function)
+        try:
+            selection = conn.execute('''SELECT id FROM purchase_log ORDER BY id DESC LIMIT 1''').fetchone()
+            self.purchase_number = selection[0] + 1   # adding one to the last recorded purchase ID to make it increment
+        except Exception as e:
+            print("There probably wasn't an entry to grab and dissect, leaving it as 0.")
+            print(e)
+
         print('setting session objects')
         self.label_username.setText(user_session.username)
         print(user_session.username)
@@ -468,8 +479,10 @@ class MenuPageUI(QtWidgets.QWidget):
                     dr += 1
                 drink_buttons_total += 1
 
+    # TODO instead of searching the table each click, populate a dictionary to search and clear it when you clear
     def button_click(self, name, price):
         found_item = self.tableWidget.findItems(name, Qt.MatchExactly)
+        self.selected_items.append((name, price))
         if found_item == []:
             self.tableWidget.insertRow(self.row)
             self.tableWidget.setItem(self.row, 0, QTableWidgetItem(name))
@@ -562,6 +575,7 @@ class MenuPageUI(QtWidgets.QWidget):
 
     def clear_purchase(self):
         self.purchase_total = 0
+        self.selected_items.clear()
         # clear the table
         self.tableWidget.setRowCount(0)
         self.row = 0
@@ -572,6 +586,19 @@ class MenuPageUI(QtWidgets.QWidget):
                         SET bill = ?
                         WHERE user_id = ?;''',
                      (self.purchase_total + user_session.bill, user_session.user_id))
+        unique_items = set(self.selected_items)
+        print("Unique items: {}".format(unique_items))
+        timestamp = datetime.datetime.now()
+        for item in unique_items:
+            number_bought = self.selected_items.count(item)
+            item_name = item[0]
+            item_price = item[1]
+            conn.execute('''INSERT INTO purchase_log (id, user, item, number_bought, unit_price, timestamp)
+                                VALUES (?, ?, ?, ?, ?, ?);''',
+                         (self.purchase_number, user_session.user_id, item_name, number_bought, item_price, timestamp))
+            iteration = 1
+            print("Added item number {}".format(iteration))
+            iteration += 1
         conn.commit()
         self.clear_purchase()
         user_session.end_session()
@@ -1073,7 +1100,7 @@ class PayButtonsUI(QtWidgets.QWidget):
 
 # --------------------Utility classes below-------------------------
 
-# TODO Session class to store user data across pages. Should be a singleton.
+# TODO Session class to store user data across pages. Should be made a singleton.
 class Session:
     def __init__(self, sql_tuple=(None, None, None, None, None,)):
         self.user_id = sql_tuple[0]
@@ -1096,7 +1123,7 @@ class Session:
         self.bill = None
         print("Ended session")
 
-# TODO this doesn't need to be here, move it to login page class, only place it's used
+# TODO this doesn't need to be here, move it to login page class, only place it's used (maybe not in the future)
     def authenticate(self, sql_tuple, pwentry):
         pwhash = sql_tuple[2]
         if pbkdf2_sha256.verify(pwentry, pwhash):
@@ -1112,15 +1139,25 @@ try:
                                  username    TEXT        NOT NULL       UNIQUE,
                                  pwhash      VARCHAR     NOT NULL,
                                  privileges  CHAR(1)  NOT NULL);''')
+
     conn.execute('''CREATE TABLE IF NOT EXISTS menu_items
-                                    (id           INTEGER          PRIMARY KEY    AUTOINCREMENT,
-                                     item_name    TEXT             NOT NULL       UNIQUE,
-                                     price        DECIMAL(5,2)     NOT NULL,
-                                     category     TEXT             NOT NULL,
-                                     icon_path    VARCHAR);''')
+                                (id           INTEGER          PRIMARY KEY    AUTOINCREMENT,
+                                 item_name    TEXT             NOT NULL       UNIQUE,
+                                 price        DECIMAL(5,2)     NOT NULL,
+                                 category     TEXT             NOT NULL,
+                                 icon_path    VARCHAR);''')
+
     conn.execute('''CREATE TABLE IF NOT EXISTS user_bills
-                                    (user_id     INTEGER       NOT NULL    PRIMARY KEY     UNIQUE,
-                                     bill        INTEGER  NOT NULL);''')
+                                (user_id     INTEGER       NOT NULL    PRIMARY KEY     UNIQUE,
+                                 bill        INTEGER  NOT NULL);''')
+
+    conn.execute('''CREATE TABLE IF NOT EXISTS purchase_log
+                                (id                  INTEGER,
+                                 user                INTEGER         NOT NULL,
+                                 item                TEXT            NOT NULL,
+                                 number_bought       INTEGER         NOT NULL,
+                                 unit_price          DECIMAL(5,2)    NOT NULL,
+                                 timestamp           INTEGER         NOT NULL);''')
 
     conn.commit()
 
