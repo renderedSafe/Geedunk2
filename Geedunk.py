@@ -10,7 +10,7 @@ from PicButton import PicButton
 import os
 from ListWidgetImageItem import ListWidgetImageItem
 import sys
-import datetime
+from datetime import datetime
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -43,6 +43,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.edit_bills_page = EditUserBillsPageUI(self)
         self.central_widget.addWidget(self.edit_bills_page)
+
+        self.purchase_history_page = PurchaseHistoryUI(self)
+        self.central_widget.addWidget(self.purchase_history_page)
 
         # ------------------Other stuff -----------------------------
 
@@ -82,6 +85,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def to_edit_bills_page(self):
         self.central_widget.setCurrentWidget(self.edit_bills_page)
+
+    def to_purchase_history_page(self):
+        self.central_widget.setCurrentWidget(self.purchase_history_page)
 
 # ------------------Page defining classes below.-----------------
 
@@ -588,7 +594,7 @@ class MenuPageUI(QtWidgets.QWidget):
                      (self.purchase_total + user_session.bill, user_session.user_id))
         unique_items = set(self.selected_items)
         print("Unique items: {}".format(unique_items))
-        timestamp = datetime.datetime.now()
+        timestamp = datetime.now()
         for item in unique_items:
             number_bought = self.selected_items.count(item)
             item_name = item[0]
@@ -622,6 +628,7 @@ class AdminOptionsPageUI(QtWidgets.QWidget):
         self.pushButton_manageUserProfiles.clicked.connect(self.parent().to_edit_user_page)
         self.pushButton_manageUserBills.clicked.connect(self.to_manage_bills)
         self.pushButton_exitApplication.clicked.connect(self.parent().shutdown)
+        self.pushButton_purchaseHistory.clicked.connect(self.parent().to_purchase_history_page)
 
     def to_manage_bills(self):
         window.edit_bills_page.load_table()
@@ -788,7 +795,7 @@ class EditMenuItemsPageUI(QtWidgets.QWidget):
         for item in selection:
             self.tableWidget.insertRow(row)
             self.tableWidget.setItem(row, 0, QTableWidgetItem(item[0]))
-            self.tableWidget.setItem(row, 1, QTableWidgetItem(f'{item[1]:.2f}'))
+            self.tableWidget.setItem(row, 1, QTableWidgetItem('{:.2f}'.format(item[1])))
             row += 1
 
     def edit(self):
@@ -976,6 +983,39 @@ class EditUserBillsPageUI(QtWidgets.QWidget):
     def back(self):
         self.load_table()
         window.to_admin_options_page()
+
+
+class PurchaseHistoryUI(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super(PurchaseHistoryUI, self).__init__(parent)
+        loadUi('purchase_history_table.ui', self)
+        self.load_table()
+
+        self.pushButton_back.clicked.connect(self.parent().to_admin_options_page)
+
+    def load_table(self):
+        selection = conn.execute("""SELECT 
+                       USER_LOGIN.username, PURCHASE_LOG.item, PURCHASE_LOG.number_bought, 
+                       PURCHASE_LOG.timestamp, PURCHASE_LOG.unit_price
+                       FROM user_login JOIN purchase_log
+                       ON PURCHASE_LOG.user = USER_LOGIN.id""").fetchall()
+        row_number = 0
+        self.tableWidget.setRowCount(0)
+        for row in selection:
+            print(row)
+            username = row[0]
+            purchased_item = row[1]
+            quantity = row[2]
+            timestamp = datetime.strptime(row[3], '%Y-%m-%d %H:%M:%S.%f').strftime('%x')
+            unit_price = row[4]
+            self.tableWidget.insertRow(row_number)
+            self.tableWidget.setItem(row_number, 0, QTableWidgetItem(username))
+            self.tableWidget.setItem(row_number, 1, QTableWidgetItem(purchased_item))
+            self.tableWidget.setItem(row_number, 2, QTableWidgetItem('{}'.format(quantity)))
+            self.tableWidget.setItem(row_number, 3, QTableWidgetItem(timestamp))
+            self.tableWidget.setItem(row_number, 4, QTableWidgetItem('${:.2f}'.format(unit_price)))
+            row_number += 1
+
 
 
 # ------------------Individual/reusable widget defining classes below--------------------------------------------------
