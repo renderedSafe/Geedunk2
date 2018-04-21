@@ -143,7 +143,7 @@ class NewUserPageUI(QtWidgets.QWidget):
 
         self.numpad.pushButton_login.setText('Enter')
         self.create_user_form.label_firstRun.setText('')
-        if datetime.today().strftime('%m-%d') != '04-01':
+        if datetime.today().strftime('%m-%d') != '04-21':
             self.create_user_form.checkBox_AI.setHidden(True)
 
         self.create_user_form.pushButton_keyboard.clicked.connect(self.show_keyboard)
@@ -179,11 +179,16 @@ class NewUserPageUI(QtWidgets.QWidget):
                     privileges = 'a'
                 else:
                     privileges = 'b'
+                if self.create_user_form.checkBox_AI.isChecked():
+                    robots = 1
+                else:
+                    robots = 0
+
                 if len(self.create_user_form.lineEdit_pin.text()) == 4:
                     pwhash = pbkdf2_sha256.hash(self.create_user_form.lineEdit_pin.text())
-                    conn.execute("INSERT INTO USER_LOGIN (USERNAME, PWHASH, PRIVILEGES) \
-                                  VALUES (?,?,?);",
-                                 (self.create_user_form.lineEdit_username.text().strip(), pwhash, privileges))
+                    conn.execute("INSERT INTO USER_LOGIN (USERNAME, PWHASH, PRIVILEGES, is_scared_of_killer_robots) \
+                                  VALUES (?,?,?,?);",
+                                 (self.create_user_form.lineEdit_username.text().strip(), pwhash, privileges, robots))
                     conn.commit()
                     user_id = conn.execute("SELECT id "
                                            "FROM user_login "
@@ -211,10 +216,16 @@ class NewUserPageUI(QtWidgets.QWidget):
                     privileges = 'a'
                 else:
                     privileges = 'b'
+                if self.create_user_form.checkBox_AI.isChecked():
+                    robots = 1
+                else:
+                    robots = 0
                 if len(self.create_user_form.lineEdit_pin.text()) == 4:
                     pwhash = pbkdf2_sha256.hash(self.create_user_form.lineEdit_pin.text())
-                    conn.execute("UPDATE user_login SET username = ?, pwhash = ?, privileges = ? WHERE id = ?;",
-                                 (self.create_user_form.lineEdit_username.text().strip(), pwhash, privileges, user_id))
+                    conn.execute("UPDATE user_login SET username = ?, pwhash = ?, privileges = ?, \
+                                  is_scared_of_killer_robots = ? WHERE id = ?;",
+                                 (self.create_user_form.lineEdit_username.text().strip(),
+                                  pwhash, privileges, robots, user_id))
                     conn.commit()
                     window.to_admin_options_page()
                     self.create_mode()
@@ -234,6 +245,7 @@ class NewUserPageUI(QtWidgets.QWidget):
         self.create_user_form.lineEdit_pin.clear()
         self.create_user_form.checkBox_admin.setEnabled(True)
         self.create_user_form.checkBox_admin.setChecked(False)
+        self.create_user_form.checkBox_AI.setChecked(False)
 
     def edit_mode(self, selection):
         self.create_user_form.label_firstRun.setText('')
@@ -243,6 +255,9 @@ class NewUserPageUI(QtWidgets.QWidget):
 
         if selection[3] == 'a':
             self.create_user_form.checkBox_admin.setChecked(True)
+
+        if selection[4] == 1:
+            self.create_user_form.checkBox_AI.setChecked(True)
 
         if id == user_session.user_id:
             self.create_user_form.checkBox_admin.setEnabled(False)
@@ -833,7 +848,7 @@ class EditUserPageUI(QtWidgets.QWidget):
 
     def edit_user(self):
         try:
-            selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES
+            selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES, is_scared_of_killer_robots
                                                 FROM USER_LOGIN
                                                 WHERE USERNAME = ?;''',
                                      (self.user_list.listWidget.currentItem().text(),)).fetchone()
