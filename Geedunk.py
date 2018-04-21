@@ -142,6 +142,9 @@ class NewUserPageUI(QtWidgets.QWidget):
         self.setLayout(layout)
 
         self.numpad.pushButton_login.setText('Enter')
+        self.create_user_form.label_firstRun.setText('')
+        if datetime.today().strftime('%m-%d') != '04-01':
+            self.create_user_form.checkBox_AI.setHidden(True)
 
         self.create_user_form.pushButton_keyboard.clicked.connect(self.show_keyboard)
         self.create_user_form.pushButton_numpad.clicked.connect(self.show_numpad)
@@ -240,6 +243,9 @@ class NewUserPageUI(QtWidgets.QWidget):
 
         if selection[3] == 'a':
             self.create_user_form.checkBox_admin.setChecked(True)
+
+        if id == user_session.user_id:
+            self.create_user_form.checkBox_admin.setEnabled(False)
 
         self.create_user_form.pushButton_createUser.disconnect()
         self.create_user_form.pushButton_createUser.clicked.connect(partial(self.write_edit, id))
@@ -1017,7 +1023,6 @@ class PurchaseHistoryUI(QtWidgets.QWidget):
             row_number += 1
 
 
-
 # ------------------Individual/reusable widget defining classes below--------------------------------------------------
 
 # TODO move these to separate files
@@ -1176,9 +1181,10 @@ try:
     cursor = conn.cursor()
     conn.execute('''CREATE TABLE IF NOT EXISTS user_login
                                 (id          INTEGER     PRIMARY KEY  AUTOINCREMENT,
-                                 username    TEXT        NOT NULL       UNIQUE,
-                                 pwhash      VARCHAR     NOT NULL,
-                                 privileges  CHAR(1)  NOT NULL);''')
+                                 username    TEXT               NOT NULL       UNIQUE,
+                                 pwhash      VARCHAR            NOT NULL,
+                                 privileges  CHAR(1)            NOT NULL,
+                                 is_scared_of_killer_robots     INTEGER        DEFAULT 0);''')
 
     conn.execute('''CREATE TABLE IF NOT EXISTS menu_items
                                 (id           INTEGER          PRIMARY KEY    AUTOINCREMENT,
