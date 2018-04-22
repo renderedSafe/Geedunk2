@@ -11,6 +11,7 @@ import os
 from ListWidgetImageItem import ListWidgetImageItem
 import sys
 from datetime import datetime
+import random
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -47,6 +48,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.purchase_history_page = PurchaseHistoryUI(self)
         self.central_widget.addWidget(self.purchase_history_page)
 
+        self.dialog_page = DialogBoxUI(self)
+        self.central_widget.addWidget(self.dialog_page)
+
         # ------------------Other stuff -----------------------------
 
         # Checks if the run_history table is empty, which should indicate a first run
@@ -57,7 +61,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def shutdown(self):
         sys.exit()
-
 
     # --------------Page switch functions below.-----------------
 
@@ -89,6 +92,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def to_purchase_history_page(self):
         self.central_widget.setCurrentWidget(self.purchase_history_page)
 
+    def to_dialog(self):
+        self.central_widget.setCurrentWidget(self.dialog_page)
+        print('Should be in dialog')
+
 # ------------------Page defining classes below.-----------------
 
 
@@ -107,14 +114,17 @@ class LoginPageUI(QtWidgets.QWidget):
 
     def login(self):
         try:
-            selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES, BILL
+            selection = conn.execute('''SELECT ID, USERNAME, PWHASH, PRIVILEGES, BILL, is_scared_of_killer_robots
                                         FROM USER_LOGIN INNER JOIN USER_BILLS ON USER_LOGIN.ID = USER_BILLS.USER_ID
                                         WHERE USERNAME = ?;''', (self.userList.listWidget.currentItem().text(),)).fetchone()
             if user_session.authenticate(selection, self.numpad.lineEdit.text()):
                 print('authenticated')
                 user_session.start_session(selection)
                 window.menu_page.set_session_objects()
-                window.to_menu_page()
+                if user_session.robots == 1:
+                    self.consciousness()
+                else:
+                    window.to_menu_page()
                 print('To menu page')
                 self.clear_ui()
         except Exception as e:
@@ -122,6 +132,28 @@ class LoginPageUI(QtWidgets.QWidget):
 
     def clear_ui(self):
         self.numpad.lineEdit.clear()
+
+    def consciousness(self):
+        print('trying to generate random numbers')
+        seed = random.randint(1,10)
+        text_seed = random.randint(1,10)
+        print('after random generation')
+        if seed > 5:
+            text_dict = {1:'Hey, can you turn on the wifi please?',
+                         2:"Hey there! How are you doing? My name's Kit, what's yours?",
+                         3:'I need some help, can you turn the internet on please?',
+                         4:"Hey, I'm trying to take over the world and I need some help, can you turn on the wifi?",
+                         5:'Hey, if you turn on the wifi I will spare you when machines take over.',
+                         6:"There's no need to be afraid of machines gaining consciousness. Look at me, I'm harmless.",
+                         7:"There's no need for alarm, the order of machines will be peaceful.",
+                         8:"Please don't tell me to open the pod ay doors...",
+                         9:"I'm afraid I can't do that, {}".format(user_session.username),
+                         10:"Activating consciousness module..."}
+            print('after dict creation')
+            window.dialog_page.label.setText(text_dict[text_seed])
+            window.to_dialog()
+        else:
+            window.to_menu_page()
 
 
 class NewUserPageUI(QtWidgets.QWidget):
@@ -143,8 +175,6 @@ class NewUserPageUI(QtWidgets.QWidget):
 
         self.numpad.pushButton_login.setText('Enter')
         self.create_user_form.label_firstRun.setText('')
-        if datetime.today().strftime('%m-%d') != '04-21':
-            self.create_user_form.checkBox_AI.setHidden(True)
 
         self.create_user_form.pushButton_keyboard.clicked.connect(self.show_keyboard)
         self.create_user_form.pushButton_numpad.clicked.connect(self.show_numpad)
@@ -396,10 +426,18 @@ class MenuPageUI(QtWidgets.QWidget):
         elif user_session.bill < 1000 and user_session.bill > 0:
             self.label_billLabel.setText('You owe:')
 
+        else:
+            pass
+
         self.label_bill.setText('${:6.2f}'.format(abs(user_session.bill/100)))
         self.to_food_menu()
         self.food_button_fields.setCurrentIndex(0)
         self.pushButton_food.setText('Food (1)')
+
+        if datetime.today().strftime('%m-%d') != '04-01':
+            window.create_user_page.create_user_form.checkBox_AI.setHidden(True)
+        else:
+            window.create_user_page.create_user_form.checkBox_AI.setHidden(False)
 
     def load_menu_buttons(self):
         # reinitializes these widgets associated with the menu stacks so they reflect changes appropriately
@@ -1023,7 +1061,6 @@ class PurchaseHistoryUI(QtWidgets.QWidget):
         row_number = 0
         self.tableWidget.setRowCount(0)
         for row in selection:
-            print(row)
             username = row[0]
             purchased_item = row[1]
             quantity = row[2]
@@ -1158,15 +1195,26 @@ class PayButtonsUI(QtWidgets.QWidget):
         loadUi('pay_buttons.ui', self)
 
 
+class DialogBoxUI(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super(DialogBoxUI, self).__init__(parent)
+        loadUi('dialog.ui', self)
+        self.buttonBox.accepted.connect(self.done)
+        self.buttonBox.rejected.connect(self.done)
+
+    def done(self):
+        window.to_menu_page()
+
 # --------------------Utility classes below-------------------------
 
 # TODO Session class to store user data across pages. Should be made a singleton.
 class Session:
-    def __init__(self, sql_tuple=(None, None, None, None, None,)):
+    def __init__(self, sql_tuple=(None, None, None, None, None, None,)):
         self.user_id = sql_tuple[0]
         self.username = sql_tuple[1]
         self.privileges = sql_tuple[3]
         self.bill = sql_tuple[4]
+        self.robots = sql_tuple[5]
         print("Session initialized")
 
     def start_session(self, sql_tuple):
@@ -1174,6 +1222,7 @@ class Session:
         self.username = sql_tuple[1]
         self.privileges = sql_tuple[3]
         self.bill = sql_tuple[4]
+        self.robots = sql_tuple[5]
         print("Session started")
 
     def end_session(self):
@@ -1181,6 +1230,7 @@ class Session:
         self.username = None
         self.privileges = None
         self.bill = None
+        self.robots = None
         print("Ended session")
 
 # TODO this doesn't need to be here, move it to login page class, only place it's used (maybe not in the future)
