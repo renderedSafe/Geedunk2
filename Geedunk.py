@@ -311,6 +311,10 @@ class NewUserPageUI(QtWidgets.QWidget):
         self.create_user_form.pushButton_back.disconnect()
         self.create_user_form.pushButton_createUser.clicked.connect(self.write_first_admin)
         self.create_user_form.pushButton_createUser.setText('Create Admin')
+        if datetime.today().strftime('%m-%d') != '04-01':
+            self.create_user_form.checkBox_AI.setHidden(True)
+        else:
+            self.create_user_form.checkBox_AI.setHidden(False)
 
     def write_first_admin(self):
         try:
@@ -336,6 +340,7 @@ class NewUserPageUI(QtWidgets.QWidget):
                     window.login_page.userList.add_names()
                     window.edit_user_page.user_list.add_names()
                     self.create_mode()
+                    self.create_user_form.pushButton_back.clicked.connect(self.back)
                     self.clear_ui()
                 else:
                     self.create_user_form.label_error.setText('Pin not 4 digits long')
