@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 from PyQt5.QtGui import *
 from passlib.hash import pbkdf2_sha256
-from functools import partial
+from functools import partial, reduce
 import sqlite3
 from PicButton import PicButton
 import os
@@ -12,6 +12,7 @@ from ListWidgetImageItem import ListWidgetImageItem
 import sys
 from datetime import datetime
 import random
+from operator import itemgetter, concat
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -1123,13 +1124,38 @@ class UserListWidgetUI(QtWidgets.QWidget):
 
     def add_names(self):
         self.listWidget.clear()
-        selection = conn.execute('SELECT USERNAME FROM user_login')
+        selection = self.get_users_ranks()
         font = QFont()
         font.setPointSize(20)
         for row in selection:
             item = QListWidgetItem(row[0])
             item.setFont(font)
             self.listWidget.addItem(item)
+
+    def get_users_ranks(self):
+        user_selection = conn.execute('SELECT username, id FROM user_login').fetchall()
+        purchase_selection = conn.execute('SELECT user FROM purchase_log ASC LIMIT 100').fetchall()
+        purchase_selection = reduce(concat, purchase_selection)
+        rank_list = []
+        for user in user_selection:
+            username = user[0]
+            user_id = user[1]
+            if user_id in purchase_selection:
+                number_purchases = purchase_selection.count(user_id)
+            else:
+                number_purchases = 0
+
+            rank_list.append([username, number_purchases])
+
+        print("Purchase selection: {}".format(purchase_selection))
+        rank_list.sort(key=itemgetter(1), reverse=True)
+        print("Rank list: {}".format(rank_list))
+        print(rank_list)
+
+        return rank_list
+
+
+
 
 
 class CreateUserFormUI(QtWidgets.QWidget):
